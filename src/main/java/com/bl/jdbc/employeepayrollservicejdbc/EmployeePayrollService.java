@@ -9,26 +9,28 @@ public class EmployeePayrollService {
 
 	private List<EmployeePayrollData> empPayrollList;
 
+	private EmployeePayrollDBService employeePayrollDBService;
+
+	public EmployeePayrollService() {
+		employeePayrollDBService = EmployeePayrollDBService.getInstance();
+	}
+
 	// Parameterized constructor
 	public EmployeePayrollService(List<EmployeePayrollData> empPayrollList) {
 		this.empPayrollList = empPayrollList;
 	}
 
-	public EmployeePayrollService() {
-
-	}
-
 	public List<EmployeePayrollData> readEmployeePayrollDataDB(IOService ioService) {
 		if (ioService.equals(IOService.DB_IO)) {
-			this.empPayrollList = new EmployeePayrollDBService().readData();
+			this.empPayrollList = employeePayrollDBService.readData();
 		}
 		return this.empPayrollList;
 	}
 
 	public void updateEmployeeSalary(String name, double salary) {
-		int result = new EmployeePayrollDBService().updateEmployeeData(name, salary);
+		int result = employeePayrollDBService.updateEmployeeData(name, salary);
 		if (result == 0)
-			return; 
+			return;
 		EmployeePayrollData empPayrollData = this.getEmployeePayrollData(name);
 		if (empPayrollData != null)
 			empPayrollData.setEmpSalary(salary);
@@ -40,7 +42,7 @@ public class EmployeePayrollService {
 	}
 
 	public boolean checkEmployeePayrollInSyncWithDB(String name) {
-		List<EmployeePayrollData> empPayrollDataList = new EmployeePayrollDBService().getEmployeePayrollData(name);
+		List<EmployeePayrollData> empPayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
 		return empPayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 
