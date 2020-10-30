@@ -14,6 +14,7 @@ public class EmployeePayrollTest {
 		EmployeePayrollService empPayrollService = new EmployeePayrollService();
 		List<EmployeePayrollData> empPayrollData = empPayrollService
 				.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
+		System.out.println(empPayrollData);
 		Assert.assertEquals(3, empPayrollData.size());
 	}
 	
@@ -24,5 +25,17 @@ public class EmployeePayrollTest {
 		empPayrollService.updateEmployeeSalary("Terisa", 3000000.0);
 		boolean result = empPayrollService.checkEmployeePayrollInSyncWithDB("Terisa");
 		Assert.assertTrue(result);
+	}
+	
+//	UC5
+	@Test
+	public void givenDateRange_shouldMatchWithEmployeeJoinedInDateRange() {
+		EmployeePayrollService empPayrollService = new EmployeePayrollService();
+		List<EmployeePayrollData> empPayrollData = empPayrollService.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
+		String start = "2019-01-01";
+		String end = "2020-01-05";
+		List<EmployeePayrollData> empPayrollDataList = empPayrollService.getEmpByDateRange(start, end);
+		System.out.println(empPayrollDataList);
+		Assert.assertEquals(1, empPayrollDataList.size());
 	}
 }
