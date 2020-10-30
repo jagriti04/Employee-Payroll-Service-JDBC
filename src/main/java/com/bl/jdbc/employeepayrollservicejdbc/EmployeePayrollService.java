@@ -46,4 +46,10 @@ public class EmployeePayrollService {
 		return empPayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 
+	public List<EmployeePayrollData> getEmpByDateRange(String startDate, String endDate) {
+		this.empPayrollList = employeePayrollDBService.getEmployeePayrollDataWithStartDateInGivenRange(startDate,
+				endDate);
+		return this.empPayrollList;
+	}
+
 }

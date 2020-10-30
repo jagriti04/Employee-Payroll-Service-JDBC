@@ -104,4 +104,19 @@ public class EmployeePayrollDBService {
 		}
 	}
 
+	public List<EmployeePayrollData> getEmployeePayrollDataWithStartDateInGivenRange(String startDate, String endDate){
+		List<EmployeePayrollData> empPayrollDataList = new ArrayList<>();
+
+		try {
+			Connection connection = this.getConnection();
+			String sql = String.format("select * from employee_payroll where start BETWEEN CAST('%s' AS DATE) and CAST('%s' AS DATE);", startDate, endDate);
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			empPayrollDataList = getEmployeePayrollData(resultSet);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return empPayrollDataList;
+	}
 }
