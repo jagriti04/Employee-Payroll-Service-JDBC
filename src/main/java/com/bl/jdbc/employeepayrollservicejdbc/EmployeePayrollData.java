@@ -55,4 +55,13 @@ public class EmployeePayrollData {
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() !=o.getClass()) return false;
+		EmployeePayrollData that = (EmployeePayrollData) o;
+		return empId == that.empId && Double.compare(that.empSalary, empSalary) == 0
+					 && empName.equals(that.empName);
+	}
 }
