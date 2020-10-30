@@ -40,7 +40,8 @@ public class EmployeePayrollService {
 	}
 
 	public boolean checkEmployeePayrollInSyncWithDB(String name) {
-		return false;
+		List<EmployeePayrollData> empPayrollDataList = new EmployeePayrollDBService().getEmployeePayrollData(name);
+		return empPayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 
 }
