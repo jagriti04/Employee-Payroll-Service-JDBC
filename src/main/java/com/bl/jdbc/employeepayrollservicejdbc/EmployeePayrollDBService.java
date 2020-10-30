@@ -30,9 +30,7 @@ public class EmployeePayrollDBService {
 		String userName = "root";
 		String password = "treadwill04";
 		Connection con;
-		System.out.println("Connecting to db:" + jdbcURl);
 		con = DriverManager.getConnection(jdbcURl, userName, password);
-		System.out.println("Connection is successful!!" + con);
 		return con;
 	}
 
@@ -118,5 +116,20 @@ public class EmployeePayrollDBService {
 			e.printStackTrace();
 		}
 		return empPayrollDataList;
+	}
+
+	public double getEmployeePayrollDataAvgSalary(String gender) {
+		double avgSalary = 0;
+		try (Connection connection = this.getConnection()){
+			String sql = String.format("Select avg(salary) from employee_payroll Where gender = '%s' Group by gender;", gender);
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while(resultSet.next()) {
+				avgSalary = resultSet.getInt("avg(salary)");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return avgSalary;
 	}
 }

@@ -35,7 +35,17 @@ public class EmployeePayrollTest {
 		String start = "2019-01-01";
 		String end = "2020-01-05";
 		List<EmployeePayrollData> empPayrollDataList = empPayrollService.getEmpByDateRange(start, end);
-		System.out.println(empPayrollDataList);
 		Assert.assertEquals(1, empPayrollDataList.size());
+	}
+	
+//	UC6
+	@Test
+	public void givenEmployeeDataInDBByGender_shouldMatchAvgSalary() {
+		EmployeePayrollService empPayrollService = new EmployeePayrollService();
+		String gender = "F";
+		double avgSalary = empPayrollService.getEmpDataAvgByGender(gender);
+		System.out.println("avg -" + avgSalary);
+		boolean result = (3000000.0 == avgSalary);
+		Assert.assertTrue(result);
 	}
 }

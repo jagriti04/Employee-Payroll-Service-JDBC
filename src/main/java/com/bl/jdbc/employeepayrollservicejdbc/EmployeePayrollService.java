@@ -52,4 +52,9 @@ public class EmployeePayrollService {
 		return this.empPayrollList;
 	}
 
+	public double getEmpDataAvgByGender(String gender) {
+		double avgSalary = employeePayrollDBService.getEmployeePayrollDataAvgSalary(gender);
+		return avgSalary;
+	}
+
 }
