@@ -1,5 +1,6 @@
 package com.bl.jdbc.employeepayrollservicejdbc;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class EmployeePayrollService {
@@ -55,6 +56,11 @@ public class EmployeePayrollService {
 	public double getEmpDataAvgByGender(String gender) {
 		double avgSalary = employeePayrollDBService.getEmployeePayrollDataAvgSalary(gender);
 		return avgSalary;
+	}
+
+	public void addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate) {
+		empPayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, startDate));
+		
 	}
 
 }

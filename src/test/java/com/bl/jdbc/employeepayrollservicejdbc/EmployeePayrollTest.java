@@ -2,6 +2,7 @@ package com.bl.jdbc.employeepayrollservicejdbc;
 
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.Assert;
@@ -15,29 +16,31 @@ public class EmployeePayrollTest {
 		List<EmployeePayrollData> empPayrollData = empPayrollService
 				.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
 		System.out.println(empPayrollData);
-		Assert.assertEquals(3, empPayrollData.size());
+		Assert.assertEquals(9, empPayrollData.size());
 	}
-	
+
 	@Test
 	public void givenNewSalaryForEmployee_whenUpdated_shouldSyncWithDB() {
 		EmployeePayrollService empPayrollService = new EmployeePayrollService();
-		List<EmployeePayrollData> empPayrollData = empPayrollService.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
+		List<EmployeePayrollData> empPayrollData = empPayrollService
+				.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
 		empPayrollService.updateEmployeeSalary("Terisa", 3000000.0);
 		boolean result = empPayrollService.checkEmployeePayrollInSyncWithDB("Terisa");
 		Assert.assertTrue(result);
 	}
-	
+
 //	UC5
 	@Test
 	public void givenDateRange_shouldMatchWithEmployeeJoinedInDateRange() {
 		EmployeePayrollService empPayrollService = new EmployeePayrollService();
-		List<EmployeePayrollData> empPayrollData = empPayrollService.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
+		List<EmployeePayrollData> empPayrollData = empPayrollService
+				.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
 		String start = "2019-01-01";
 		String end = "2020-01-05";
 		List<EmployeePayrollData> empPayrollDataList = empPayrollService.getEmpByDateRange(start, end);
 		Assert.assertEquals(1, empPayrollDataList.size());
 	}
-	
+
 //	UC6
 	@Test
 	public void givenEmployeeDataInDBByGender_shouldMatchAvgSalary() {
@@ -45,7 +48,17 @@ public class EmployeePayrollTest {
 		String gender = "F";
 		double avgSalary = empPayrollService.getEmpDataAvgByGender(gender);
 		System.out.println("avg -" + avgSalary);
-		boolean result = (3000000.0 == avgSalary);
+		boolean result = (3750000.0 == avgSalary);
+		Assert.assertTrue(result);
+	}
+
+//	UC 7
+	@Test
+	public void givenNewEmployee_whenAdded_shouldSyncWithDB() {
+		EmployeePayrollService empService = new EmployeePayrollService();
+		empService.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
+		empService.addEmployeeToPayroll("Mark", "F", 4000000.0, LocalDate.now());
+		boolean result = empService.checkEmployeePayrollInSyncWithDB("Mark");
 		Assert.assertTrue(result);
 	}
 }
