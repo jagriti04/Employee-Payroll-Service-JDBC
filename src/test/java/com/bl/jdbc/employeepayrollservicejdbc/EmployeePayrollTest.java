@@ -54,7 +54,7 @@ public class EmployeePayrollTest {
 
 //	UC 7
 	@Test
-	public void givenNewEmployee_whenAdded_shouldSyncWithDB() {
+	public void givenNewEmployee_whenAdded_shouldSyncWithDB() throws EmployeePayrollException {
 		EmployeePayrollService empService = new EmployeePayrollService();
 		empService.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
 		empService.addEmployeeToPayroll("Mark", "M", 4000000.0, LocalDate.now());
