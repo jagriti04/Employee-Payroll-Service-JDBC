@@ -48,7 +48,7 @@ public class EmployeePayrollTest {
 		String gender = "F";
 		double avgSalary = empPayrollService.getEmpDataAvgByGender(gender);
 		System.out.println("avg -" + avgSalary);
-		boolean result = (3750000.0 == avgSalary);
+		boolean result = (3600000.0 == avgSalary);
 		Assert.assertTrue(result);
 	}
 
@@ -57,7 +57,7 @@ public class EmployeePayrollTest {
 	public void givenNewEmployee_whenAdded_shouldSyncWithDB() {
 		EmployeePayrollService empService = new EmployeePayrollService();
 		empService.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
-		empService.addEmployeeToPayroll("Mark", "F", 4000000.0, LocalDate.now());
+		empService.addEmployeeToPayroll("Mark", "M", 4000000.0, LocalDate.now());
 		boolean result = empService.checkEmployeePayrollInSyncWithDB("Mark");
 		Assert.assertTrue(result);
 	}
