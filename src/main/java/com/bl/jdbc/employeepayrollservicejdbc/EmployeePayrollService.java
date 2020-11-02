@@ -58,7 +58,7 @@ public class EmployeePayrollService {
 		return avgSalary;
 	}
 
-	public void addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate) {
+	public void addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate) throws EmployeePayrollException {
 		empPayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, startDate));
 		
 	}

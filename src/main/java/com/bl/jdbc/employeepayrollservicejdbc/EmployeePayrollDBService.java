@@ -159,14 +159,16 @@ public class EmployeePayrollDBService {
 		return empPayrollData;
 	}
 
-	public EmployeePayrollData addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate) {
+	public EmployeePayrollData addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate) throws EmployeePayrollException {
 		int employeeId = -1;
 		EmployeePayrollData employeePayrollData = null;
 		Connection connection = null;
 		try {
 			connection = this.getConnection();
+			connection.setAutoCommit(false);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new EmployeePayrollException(e.getMessage(), EmployeePayrollException.ExceptionType.CONNECTION_CREATE_ERROR);
 		}
 		try (Statement statement = connection.createStatement()) {
 			String sql = String.format(
@@ -181,6 +183,12 @@ public class EmployeePayrollDBService {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				throw new EmployeePayrollException(e.getMessage(), EmployeePayrollException.ExceptionType.QUERY_EXECUTION_ERROR);
+			}
 		}
 		try (Statement statement = connection.createStatement()) {
 			double deductions = salary * 0.2;
@@ -197,6 +205,24 @@ public class EmployeePayrollDBService {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				throw new EmployeePayrollException(e.getMessage(), EmployeePayrollException.ExceptionType.QUERY_EXECUTION_ERROR);
+			}
+		}
+		try {
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new EmployeePayrollException(e.getMessage(), EmployeePayrollException.ExceptionType.CONNECTION_CLOSING_ERROR);
+			}
 		}
 		return employeePayrollData;
 	}
