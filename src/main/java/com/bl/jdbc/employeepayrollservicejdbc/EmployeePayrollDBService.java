@@ -27,7 +27,7 @@ public class EmployeePayrollDBService {
 	}
 
 	private Connection getConnection() throws SQLException {
-		String jdbcURl = "jdbc:mysql://localhost:3306/emp_payroll_db?useSSL=false";
+		String jdbcURl = "jdbc:mysql://localhost:3306/payroll_service?useSSL=false";
 		String userName = "root";
 		String password = "treadwill04";
 		Connection con;
@@ -137,8 +137,8 @@ public class EmployeePayrollDBService {
 		return avgSalary;
 	}
 
-	public EmployeePayrollData addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate)
-			throws EmployeePayrollException {
+	public EmployeePayrollData addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate,
+			String companyName, String departmentName) throws EmployeePayrollException {
 		int employeeId = -1;
 		EmployeePayrollData employeePayrollData = null;
 		Connection connection = null;
@@ -171,10 +171,13 @@ public class EmployeePayrollDBService {
 						EmployeePayrollException.ExceptionType.QUERY_EXECUTION_ERROR);
 			}
 		}
+		this.insertDepartmentDetailsInTable(departmentName, employeeId, connection);
+		this.insertCompanyDetailsInTable(companyName, employeeId, connection);
 		int rowAffected = insertPayrollDetailsTable(salary, employeeId, connection);
 		if (rowAffected == 1) {
 			employeePayrollData = new EmployeePayrollData(employeeId, name, gender, salary, startDate);
 		}
+		
 		try {
 			connection.commit();
 		} catch (SQLException e) {
@@ -191,6 +194,52 @@ public class EmployeePayrollDBService {
 		return employeePayrollData;
 	}
 
+	private void insertDepartmentDetailsInTable(String departmentName, int employeeId, Connection connection)
+			throws EmployeePayrollException {
+		try (Statement statement = connection.createStatement()) {
+			String sql = String.format("INSERT INTO department(id,department_name)" + "VALUES ('%s','%s')", employeeId,
+					departmentName);
+			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+			if (rowAffected == 1) {
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if (resultSet.next())
+					employeeId = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				throw new EmployeePayrollException(e.getMessage(),
+						EmployeePayrollException.ExceptionType.QUERY_EXECUTION_ERROR);
+			}
+		}
+	}
+
+	private void insertCompanyDetailsInTable(String companyName, int employeeId, Connection connection)
+			throws EmployeePayrollException {
+		try (Statement statement = connection.createStatement()) {
+			String sql = String.format("INSERT INTO company(id,company_name)" + "VALUES ('%s','%s')", employeeId,
+					companyName);
+			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+			if (rowAffected == 1) {
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if (resultSet.next())
+					employeeId = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				throw new EmployeePayrollException(e.getMessage(),
+						EmployeePayrollException.ExceptionType.QUERY_EXECUTION_ERROR);
+			}
+		}
+	}
+
 	private int insertPayrollDetailsTable(double salary, int employeeId, Connection connection)
 			throws EmployeePayrollException {
 		double deductions = salary * 0.2;
@@ -198,7 +247,7 @@ public class EmployeePayrollDBService {
 		double tax = taxablePay * 0.1;
 		double netPay = salary - tax;
 		String sql = String.format(
-				"insert into payroll_details(id,basic_pay,deduction,taxable_pay,tax,net_pay)"
+				"insert into payroll(id,basic_pay,deduction,taxable_pay,tax,net_pay)"
 						+ " VALUES ('%s','%s','%s','%s','%s','%s' )",
 				employeeId, salary, deductions, taxablePay, tax, netPay);
 		int rowAffected = 0;
