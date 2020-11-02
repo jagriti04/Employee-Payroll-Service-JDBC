@@ -52,12 +52,12 @@ public class EmployeePayrollTest {
 		Assert.assertTrue(result);
 	}
 
-//	UC 7
+//	UC 9-11 -- implement ERD
 	@Test
 	public void givenNewEmployee_whenAdded_shouldSyncWithDB() throws EmployeePayrollException {
 		EmployeePayrollService empService = new EmployeePayrollService();
 		empService.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
-		empService.addEmployeeToPayroll("Mark", "M", 4000000.0, LocalDate.now());
+		empService.addEmployeeToPayroll("Mark", "M", 4000000.0, LocalDate.now(), "Reliance", "IT");
 		boolean result = empService.checkEmployeePayrollInSyncWithDB("Mark");
 		Assert.assertTrue(result);
 	}
