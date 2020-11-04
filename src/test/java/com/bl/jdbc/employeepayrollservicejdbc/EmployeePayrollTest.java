@@ -15,8 +15,7 @@ public class EmployeePayrollTest {
 		EmployeePayrollService empPayrollService = new EmployeePayrollService();
 		List<EmployeePayrollData> empPayrollData = empPayrollService
 				.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
-		System.out.println(empPayrollData);
-		Assert.assertEquals(9, empPayrollData.size());
+		Assert.assertEquals(14, empPayrollData.size());
 	}
 
 	@Test
@@ -24,8 +23,8 @@ public class EmployeePayrollTest {
 		EmployeePayrollService empPayrollService = new EmployeePayrollService();
 		List<EmployeePayrollData> empPayrollData = empPayrollService
 				.readEmployeePayrollDataDB(EmployeePayrollService.IOService.DB_IO);
-		empPayrollService.updateEmployeeSalary("Terisa", 3000000.0);
-		boolean result = empPayrollService.checkEmployeePayrollInSyncWithDB("Terisa");
+		empPayrollService.updateEmployeeSalary("Terissa", 4000000.0);
+		boolean result = empPayrollService.checkEmployeePayrollInSyncWithDB("Terissa");
 		Assert.assertTrue(result);
 	}
 
@@ -48,7 +47,7 @@ public class EmployeePayrollTest {
 		String gender = "F";
 		double avgSalary = empPayrollService.getEmpDataAvgByGender(gender);
 		System.out.println("avg -" + avgSalary);
-		boolean result = (3600000.0 == avgSalary);
+		boolean result = (2333333.0 == avgSalary);
 		Assert.assertTrue(result);
 	}
 
